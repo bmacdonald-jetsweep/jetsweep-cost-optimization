@@ -65,6 +65,7 @@ Resources:
       Timeout: 900
   Primerinvoke:
     Type: AWS::CloudFormation::CustomResource
+    DeletionPolicy: Retain
     DependsOn: LambdaFunction
     Version: "1.0"
     Properties:
