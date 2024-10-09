@@ -1,0 +1,71 @@
+Resources:
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    DeletionPolicy: Delete
+    Properties:
+      RoleName: jetsweep-cc-lambda-role
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+  LambdaPolicy:
+    Type: AWS::IAM::Policy
+    DeletionPolicy: Delete
+    Properties:
+      Roles:
+        - !Ref LambdaExecutionRole
+      PolicyName: jetsweep-cc-lambda-policy
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - iam:ListPolicies
+              - iam:CreatePolicy
+              - iam:GetRole
+              - iam:GetPolicy
+              - cur:*
+              - iam:ListRoles
+              - iam:CreateRole
+              - iam:AttachRolePolicy
+              - iam:PutRolePolicy
+              - iam:ListRolePolicies
+              - iam:GetRolePolicy
+            Resource: '*'
+          - Effect: Allow
+            Action: 
+              - logs:CreateLogStream
+              - logs:PutLogEvents
+            Resource: !Sub arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/jetsweep-cc:*
+          - Effect: Allow
+            Action: 
+              - logs:CreateLogGroup
+            Resource: !Sub arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*
+          - Effect: Allow
+            Action:
+              - s3:PutBucketPolicy
+              - s3:CreateBucket
+              - s3:ListBucket
+              - s3:GetBucketPolicy
+            Resource: !Sub arn:aws:s3:::${AWS::AccountId}-jetsweep-cloudcheckr-cur
+  LambdaFunction:
+    Type: AWS::Lambda::Function
+    DeletionPolicy: Delete
+    Properties:
+      Code:
+        S3Bucket: jetsweep-cc
+        S3Key: lambda.zip
+      FunctionName: jetsweep-cc-function
+      Handler: lambda_function.lambda_handler
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Runtime: python3.12
+      Timeout: 900
+  Primerinvoke:
+    Type: AWS::CloudFormation::CustomResource
+    DependsOn: LambdaFunction
+    Version: "1.0"
+    Properties:
+      ServiceToken: !GetAtt LambdaFunction.Arn
