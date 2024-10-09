@@ -14,7 +14,7 @@ You can also [download the template](https://github.com/bmacdonald-jetsweep/jets
 1.  Click Next on the AWS CloudFormation Create Stack page.  
 ![Alt text](https://github.com/bmacdonald-jetsweep/jetsweep-cost-optimization/blob/main/images/cf-create-stack.png)  
 
-2.  Enter a name for the S3 Bucket that will be the destination of the AWS Cost and Usage Report.  `Note: Choose a unique S3 Bucket Name that is not in use or the deployment will fail`.  Enter a name for the AWS Cost and Usage Report and then click Next.  
+2.  Use the default settings unless you would like to change the name of the CloudFormation Template.    
 ![Alt text](https://github.com/bmacdonald-jetsweep/jetsweep-cost-optimization/blob/main/images/cf-stack-details.png)
 
 3.  On the Configure stack options page you can use the default settings and then click Next.  
